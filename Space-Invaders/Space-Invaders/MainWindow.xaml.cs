@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,6 @@ namespace Space_Invaders
     {
         private bool goLeft, goRight = false;
         private List<Rectangle> itemsToRemove = new List<Rectangle>();
-        private int enemyImages = 0;
         private int bulletCooldown;
         private int bulletCooldownLimit = 90;
         private int totalEnemies;
@@ -42,7 +42,7 @@ namespace Space_Invaders
             dispatcherTimer.Start();
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
             playerRectangle.Fill = playerSkin;
-            spawnEnemies(16);
+            spawnEnemies(15);
         }
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
@@ -115,10 +115,11 @@ namespace Space_Invaders
         private void spawnEnemies(int limit)
         {
             int left = 0;
+            Random rnd = new Random();
             totalEnemies = limit;
             for (int i = 0; i < limit; i++)
             {
-                ImageBrush enemySkin = new ImageBrush();
+                ImageBrush enemySkin = randomEnemySkin(rnd);
                 Rectangle enemy = new Rectangle
                 {
                     Tag = "Enemy",
@@ -130,11 +131,17 @@ namespace Space_Invaders
                 Canvas.SetLeft(enemy, left);
                 mainCanvas.Children.Add(enemy);
                 left -= 60;
-
-                enemyImages = new Random().Next(1, 8);
-                string imageName = "pack://application:,,,/Images/Invader" + enemyImages + ".gif";
-                enemySkin.ImageSource = new BitmapImage(new Uri(imageName));
             }
+        }
+
+        private ImageBrush randomEnemySkin(Random rnd)
+        {
+            ImageBrush enemySkin = new ImageBrush();
+            int enemyImages = rnd.Next(1, 8);
+            string imageName = "pack://application:,,,/Images/Invader" + enemyImages + ".gif";
+            enemySkin.ImageSource = new BitmapImage(new Uri(imageName));
+
+            return enemySkin;
         }
 
         private void gameManager(object sender, EventArgs e)
