@@ -144,13 +144,8 @@ namespace Space_Invaders
             return enemySkin;
         }
 
-        private void gameManager(object sender, EventArgs e)
+        private void movePlayer()
         {
-            Rect player = new Rect(Canvas.GetLeft(playerRectangle),
-                Canvas.GetTop(playerRectangle),
-                playerRectangle.Width,
-                playerRectangle.Height);
-
             if (goLeft && Canvas.GetLeft(playerRectangle) > 0)
             {
                 Canvas.SetLeft(playerRectangle, Canvas.GetLeft(playerRectangle) - 10);
@@ -159,86 +154,101 @@ namespace Space_Invaders
             {
                 Canvas.SetLeft(playerRectangle, Canvas.GetLeft(playerRectangle) + 10);
             }
+        }
 
+        private void spawnBullets()
+        {
             bulletCooldown -= 3;
             if (bulletCooldown < 0)
             {
                 enemyBulletSpawner((Canvas.GetLeft(playerRectangle) + 20), 10);
                 bulletCooldown = bulletCooldownLimit;
             }
+        }
 
+        private void enemySpeedManager()
+        {
             if (totalEnemies < 10)
             {
                 enemySpeed = 20;
             }
+        }
+
+        private void playerBulletManager(Rectangle x)
+        {
+            Canvas.SetTop(x, Canvas.GetTop(x) - 20);
+            Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+            if (Canvas.GetTop(x) < 10) itemsToRemove.Add(x);
+            
+            foreach (var y in mainCanvas.Children.OfType<Rectangle>())
+            {
+                if (y is Rectangle && (string)y.Tag == "Enemy")
+                {
+                    Rect enemy = new Rect(Canvas.GetLeft(y), Canvas.GetTop(y), y.Width, y.Height);
+
+                    if (bullet.IntersectsWith(enemy))
+                    {
+                        itemsToRemove.Add(x);
+                        itemsToRemove.Add(y);
+                        totalEnemies--;
+                    }
+                }
+            }
+        }
+        private void enemyManager(Rectangle x, Rect player)
+        {
+            Canvas.SetLeft(x, Canvas.GetLeft(x) + enemySpeed);
+
+            if (Canvas.GetLeft(x) > 820)
+            {
+                Canvas.SetLeft(x, -80);
+                Canvas.SetTop(x, Canvas.GetTop(x) + (x.Height + 10));
+            }
+
+            Rect enemy = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+            if (player.IntersectsWith(enemy))
+            {
+                dispatcherTimer.Stop();
+                MessageBox.Show("Game Over");
+            }
+        }
+
+        private void enemyBulletManager(Rectangle x, Rect player)
+        {
+            Canvas.SetTop(x, Canvas.GetTop(x) + 10);
+            if (Canvas.GetTop(x) > 680)
+            {
+                itemsToRemove.Add(x);
+            }
+
+            Rect enemyBullets = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+            if (enemyBullets.IntersectsWith(player))
+            {
+                dispatcherTimer.Stop();
+                MessageBox.Show("Game Over");
+            }
+        }
+
+        private void gameManager(object sender, EventArgs e)
+        {
+            Rect player = new Rect(Canvas.GetLeft(playerRectangle),
+                Canvas.GetTop(playerRectangle),
+                playerRectangle.Width,
+                playerRectangle.Height);
+
+            movePlayer();
+            spawnBullets();
+            enemySpeedManager();
 
             foreach (var x in mainCanvas.Children.OfType<Rectangle>())
             {
-                if (x is Rectangle && (string)x.Tag == "Bullet")
-                {
-                    Canvas.SetTop(x, Canvas.GetTop(x) - 20);
-                    Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                    if (Canvas.GetTop(x) < 10)
-                    {
-                        itemsToRemove.Add(x);
-                    }
-
-                    foreach (var y in mainCanvas.Children.OfType<Rectangle>())
-                    {
-                        if (y is Rectangle && (string)y.Tag == "Enemy")
-                        {
-                            Rect enemy = new Rect(Canvas.GetLeft(y), Canvas.GetTop(y), y.Width, y.Height);
-
-                            if (bullet.IntersectsWith(enemy))
-                            {
-                                itemsToRemove.Add(x);
-                                itemsToRemove.Add(y);
-                                totalEnemies--;
-                            }
-                        }
-                    }
-                }
-
-                if (x is Rectangle && (string)x.Tag == "Enemy")
-                {
-                    Canvas.SetLeft(x, Canvas.GetLeft(x) + enemySpeed);
-
-                    if (Canvas.GetLeft(x) > 820)
-                    {
-                        Canvas.SetLeft(x, -80);
-                        Canvas.SetTop(x, Canvas.GetTop(x) + (x.Height + 10));
-                    }
-
-                    Rect enemy = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                    if (player.IntersectsWith(enemy))
-                    {
-                        dispatcherTimer.Stop();
-                        MessageBox.Show("Game Over");
-                    }
-                }
-
-                if (x is Rectangle && (string)x.Tag == "EnemyBullet")
-                {
-                    Canvas.SetTop(x, Canvas.GetTop(x) + 10);
-                    if (Canvas.GetTop(x) > 680)
-                    {
-                        itemsToRemove.Add(x);
-                    }
-
-                    Rect enemyBullets = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                    if (enemyBullets.IntersectsWith(player))
-                    {
-                        dispatcherTimer.Stop();
-                        MessageBox.Show("Game Over");
-                    }
-                }
+                if (x is Rectangle && (string)x.Tag == "Bullet") playerBulletManager(x);
+                if (x is Rectangle && (string)x.Tag == "Enemy") enemyManager(x, player);
+                if (x is Rectangle && (string)x.Tag == "EnemyBullet") enemyBulletManager(x, player);
             }
 
-            foreach (Rectangle y in itemsToRemove)
-            {
-                mainCanvas.Children.Remove(y);
-            }
-
+            foreach (Rectangle y in itemsToRemove)  mainCanvas.Children.Remove(y);
+            
             if (totalEnemies < 1)
             {
                 dispatcherTimer.Stop();
