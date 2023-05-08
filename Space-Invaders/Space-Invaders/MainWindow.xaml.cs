@@ -108,7 +108,7 @@ namespace Space_Invaders
             };
 
             Canvas.SetTop(enemyBullet, y);
-            Canvas.SetTop(enemyBullet, x);
+            Canvas.SetLeft(enemyBullet, x);
             mainCanvas.Children.Add(enemyBullet);
         }
 
