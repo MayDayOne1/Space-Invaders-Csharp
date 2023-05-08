@@ -47,7 +47,14 @@ namespace Space_Invaders
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
         {
-
+            if(e.Key == Key.Left || e.Key == Key.A)
+            {
+                goLeft = true;
+            }
+            if(e.Key == Key.Right || e.Key == Key.D)
+            {
+                goRight = true;
+            }
         }
 
         private void Canvas_KeyIsUp(object sender, KeyEventArgs e)
