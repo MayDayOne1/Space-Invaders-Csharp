@@ -59,12 +59,51 @@ namespace Space_Invaders
 
         private void Canvas_KeyIsUp(object sender, KeyEventArgs e)
         {
+            if(e.Key == Key.Left || e.Key == Key.A)
+            {
+                goLeft = false;
+            }
 
+            if(e.Key == Key.Right || e.Key == Key.D)
+            {
+                goRight = false;
+            }
+
+            if(e.Key == Key.Space)
+            {
+                itemsToRemove.Clear();
+                Rectangle bullet = new Rectangle
+                {
+                    Tag = "bullet",
+                    Height = 20,
+                    Width = 5,
+                    Fill = Brushes.White,
+                    Stroke = Brushes.Red
+                };
+
+                Canvas.SetTop(bullet, Canvas.GetTop(player) - bullet.Height);
+                Canvas.SetLeft(bullet, Canvas.GetLeft(player) - bullet.Width);
+                mainCanvas.Children.Add(bullet);
+            }
+
+            
         }
 
         private void enemyBulletSpawner(double x, double y)
         {
+            Rectangle enemyBullet = new Rectangle
+            {
+                Tag = "enemyBullet",
+                Height = 40,
+                Width = 15,
+                Fill = Brushes.Yellow,
+                Stroke = Brushes.White,
+                StrokeThickness = 5
+            };
 
+            Canvas.SetTop(enemyBullet, y);
+            Canvas.SetTop(enemyBullet, x);
+            mainCanvas.Children.Add(enemyBullet);
         }
 
         private void spawnEnemies(int limit)
