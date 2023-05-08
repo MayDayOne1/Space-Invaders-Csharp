@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="Space Invaders C#" Height="700" Width="800" FocusManager.FocusedElement="{Binding ElementName=mainCanvas}">
     <Canvas Name="mainCanvas" Background="#000" Focusable="True" KeyDown="Canvas_KeyIsDown" KeyUp="Canvas_KeyIsUp">
-        <Rectangle Name="player" Fill="#fff" Height="65" Width="55" Canvas.Left="568" Canvas.Top="594" />
+        <Rectangle Name="playerRectangle" Fill="#fff" Height="65" Width="55" Canvas.Left="568" Canvas.Top="594" />
     </Canvas>
 </Window>
