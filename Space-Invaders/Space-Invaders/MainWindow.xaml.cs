@@ -108,7 +108,30 @@ namespace Space_Invaders
 
         private void spawnEnemies(int limit)
         {
+            int left = 0;
+            totalEnemies = limit;
+            for(int i = 0; i < limit; i++)
+            {
+                ImageBrush enemySkin = new ImageBrush();
+                Rectangle enemy = new Rectangle
+                {
+                    Tag = "Enemy",
+                    Height = 45,
+                    Width = 45,
+                    Fill = enemySkin
+                };
+                Canvas.SetTop(enemy, 10);
+                Canvas.SetLeft(enemy, left);
+                mainCanvas.Children.Add(enemy);
+                left -= 60;
 
+                enemyImages = new Random().Next(1, 8);
+                string imageName = "pack://application:,,,/Images/Invader" + enemyImages + ".gif";
+                enemySkin.ImageSource = new BitmapImage(new Uri(imageName));
+                        
+               
+
+            }
         }
 
         private void gameManager(object sender, EventArgs e)
