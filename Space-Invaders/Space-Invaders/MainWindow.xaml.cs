@@ -22,7 +22,7 @@ namespace Space_Invaders
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool goLeft, goRight = false;
+        private bool goLeft, goRight, gameOver = false;
         private List<Rectangle> itemsToRemove = new List<Rectangle>();
         private int bulletCooldown;
         private int bulletCooldownLimit = 90;
@@ -36,7 +36,7 @@ namespace Space_Invaders
         public MainWindow()
         {
             InitializeComponent();
-
+            gameOver = false;
             dispatcherTimer.Tick += gameManager;
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(timeBetweenFrames);
             dispatcherTimer.Start();
@@ -69,10 +69,20 @@ namespace Space_Invaders
                 goRight = false;
             }
 
-            if (e.Key == Key.Space)
+            if (e.Key == Key.Space || e.Key == Key.Enter)
             {
+                if(gameOver)
+                {
+                    Application.Current.Shutdown();
+                    System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                }
                 itemsToRemove.Clear();
                 playerBulletSpawner();
+            }
+
+            if(e.Key == Key.Escape)
+            {
+                Application.Current.Shutdown();
             }
         }
 
@@ -93,7 +103,6 @@ namespace Space_Invaders
             Canvas.SetLeft(bullet, bulletLeftOffset);
             mainCanvas.Children.Add(bullet);
         }
-
 
         private void enemyBulletSpawner(double x, double y)
         {
@@ -209,7 +218,9 @@ namespace Space_Invaders
             if (player.IntersectsWith(enemy))
             {
                 dispatcherTimer.Stop();
-                MessageBox.Show("Game Over");
+                gameOver = true;
+                GameOver.Content = "Game Over";
+                TryAgain.Content = "Press Enter to try again";
             }
         }
 
@@ -221,11 +232,13 @@ namespace Space_Invaders
                 itemsToRemove.Add(x);
             }
 
-            Rect enemyBullets = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-            if (enemyBullets.IntersectsWith(player))
+            Rect enemyBullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+            if (enemyBullet.IntersectsWith(player))
             {
                 dispatcherTimer.Stop();
-                MessageBox.Show("Game Over");
+                gameOver = true;
+                GameOver.Content = "Game Over";
+                TryAgain.Content = "Press Enter to try again";
             }
         }
 
@@ -252,7 +265,9 @@ namespace Space_Invaders
             if (totalEnemies < 1)
             {
                 dispatcherTimer.Stop();
-                MessageBox.Show("Victory");
+                gameOver = true;
+                GameOver.Content = "You won!";
+                TryAgain.Content = "Press Enter to try again";
             }
         }
     }
