@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Space_Invaders"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Space Invaders C#" Height="700" Width="800" FocusManager.FocusedElement="{Binding ElementName=mainCanvas}">
+    <Canvas Name="mainCanvas" Background="#000" Focusable="True" KeyDown="Canvas_KeyIsDown" KeyUp="Canvas_KeyIsUp">
+        <Rectangle Name="player" Fill="#fff" Height="65" Width="55" Canvas.Left="568" Canvas.Top="594" />
+    </Canvas>
 </Window>

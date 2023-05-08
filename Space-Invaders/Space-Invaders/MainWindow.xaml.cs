@@ -27,14 +27,22 @@ namespace Space_Invaders
         private int bulletTimer;
         private int bulletTimerLimit = 90;
         private int totalEnemies;
-        DispatcherTimer dispatcherTimer = new DispatcherTimer();
-        ImageBrush playerSkin = new ImageBrush();
-        int enemySpeed = 6;
+        private int timeBetweenFrames = 41;
+        private DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        private ImageBrush playerSkin = new ImageBrush();
+        private int enemySpeed = 6;
 
 
         public MainWindow()
         {
             InitializeComponent();
+
+            dispatcherTimer.Tick += gameManager;
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(timeBetweenFrames);
+            dispatcherTimer.Start();
+            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
+            player.Fill = playerSkin;
+            spawnEnemies(8);
         }
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
