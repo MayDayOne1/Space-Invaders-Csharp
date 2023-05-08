@@ -72,22 +72,28 @@ namespace Space_Invaders
             if (e.Key == Key.Space)
             {
                 itemsToRemove.Clear();
-                Rectangle bullet = new Rectangle
-                {
-                    Tag = "Bullet",
-                    Height = 20,
-                    Width = 5,
-                    Fill = Brushes.White,
-                    Stroke = Brushes.Red
-                };
-
-                Canvas.SetTop(bullet, Canvas.GetTop(playerRectangle) - bullet.Height);
-                Canvas.SetLeft(bullet, Canvas.GetLeft(playerRectangle) - bullet.Width);
-                mainCanvas.Children.Add(bullet);
+                playerBulletSpawner();
             }
-
-
         }
+
+        private void playerBulletSpawner()
+        {
+            Rectangle bullet = new Rectangle
+            {
+                Tag = "Bullet",
+                Height = 20,
+                Width = 5,
+                Fill = Brushes.White,
+                Stroke = Brushes.Red
+            };
+
+            double bulletLeftOffset = Canvas.GetLeft(playerRectangle) + bullet.Width + 20;
+
+            Canvas.SetTop(bullet, Canvas.GetTop(playerRectangle) - bullet.Height);
+            Canvas.SetLeft(bullet, bulletLeftOffset);
+            mainCanvas.Children.Add(bullet);
+        }
+
 
         private void enemyBulletSpawner(double x, double y)
         {
