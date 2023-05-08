@@ -47,11 +47,11 @@ namespace Space_Invaders
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Left || e.Key == Key.A)
+            if (e.Key == Key.Left || e.Key == Key.A)
             {
                 goLeft = true;
             }
-            if(e.Key == Key.Right || e.Key == Key.D)
+            if (e.Key == Key.Right || e.Key == Key.D)
             {
                 goRight = true;
             }
@@ -59,17 +59,17 @@ namespace Space_Invaders
 
         private void Canvas_KeyIsUp(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Left || e.Key == Key.A)
+            if (e.Key == Key.Left || e.Key == Key.A)
             {
                 goLeft = false;
             }
 
-            if(e.Key == Key.Right || e.Key == Key.D)
+            if (e.Key == Key.Right || e.Key == Key.D)
             {
                 goRight = false;
             }
 
-            if(e.Key == Key.Space)
+            if (e.Key == Key.Space)
             {
                 itemsToRemove.Clear();
                 Rectangle bullet = new Rectangle
@@ -86,7 +86,7 @@ namespace Space_Invaders
                 mainCanvas.Children.Add(bullet);
             }
 
-            
+
         }
 
         private void enemyBulletSpawner(double x, double y)
@@ -110,7 +110,7 @@ namespace Space_Invaders
         {
             int left = 0;
             totalEnemies = limit;
-            for(int i = 0; i < limit; i++)
+            for (int i = 0; i < limit; i++)
             {
                 ImageBrush enemySkin = new ImageBrush();
                 Rectangle enemy = new Rectangle
@@ -138,33 +138,34 @@ namespace Space_Invaders
                 playerRectangle.Width,
                 playerRectangle.Height);
 
-            if(goLeft && Canvas.GetLeft(playerRectangle) > 0)
+            if (goLeft && Canvas.GetLeft(playerRectangle) > 0)
             {
                 Canvas.SetLeft(playerRectangle, Canvas.GetLeft(playerRectangle) - 10);
-            } else if(goRight && Canvas.GetLeft(playerRectangle) + 80 < Application.Current.MainWindow.Width)
+            }
+            else if (goRight && Canvas.GetLeft(playerRectangle) + 80 < Application.Current.MainWindow.Width)
             {
                 Canvas.SetLeft(playerRectangle, Canvas.GetLeft(playerRectangle) + 10);
             }
 
             bulletCooldown -= 3;
-            if(bulletCooldown < 0)
+            if (bulletCooldown < 0)
             {
                 enemyBulletSpawner((Canvas.GetLeft(playerRectangle) + 20), 10);
                 bulletCooldown = bulletCooldownLimit;
             }
 
-            if(totalEnemies < 10)
+            if (totalEnemies < 10)
             {
                 enemySpeed = 20;
             }
 
-            foreach(var x in mainCanvas.Children.OfType<Rectangle>())
+            foreach (var x in mainCanvas.Children.OfType<Rectangle>())
             {
-                if(x is Rectangle && (string)x.Tag == "Bullet")
+                if (x is Rectangle && (string)x.Tag == "Bullet")
                 {
                     Canvas.SetTop(x, Canvas.GetTop(x) - 20);
                     Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                    if(Canvas.GetTop(x) < 10)
+                    if (Canvas.GetTop(x) < 10)
                     {
                         itemsToRemove.Add(x);
                     }
@@ -185,11 +186,11 @@ namespace Space_Invaders
                     }
                 }
 
-                if(x is Rectangle && (string)x.Tag == "Enemy")
+                if (x is Rectangle && (string)x.Tag == "Enemy")
                 {
                     Canvas.SetLeft(x, Canvas.GetLeft(x) + enemySpeed);
 
-                    if(Canvas.GetLeft(x) > 820)
+                    if (Canvas.GetLeft(x) > 820)
                     {
                         Canvas.SetLeft(x, -80);
                         Canvas.SetTop(x, Canvas.GetTop(x) + (x.Height + 10));
@@ -203,16 +204,16 @@ namespace Space_Invaders
                     }
                 }
 
-                if(x is Rectangle && (string)x.Tag == "EnemyBullet")
+                if (x is Rectangle && (string)x.Tag == "EnemyBullet")
                 {
                     Canvas.SetTop(x, Canvas.GetTop(x) + 10);
-                    if(Canvas.GetTop(x) > 680)
+                    if (Canvas.GetTop(x) > 680)
                     {
                         itemsToRemove.Add(x);
                     }
 
                     Rect enemyBullets = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                    if(enemyBullets.IntersectsWith(player))
+                    if (enemyBullets.IntersectsWith(player))
                     {
                         dispatcherTimer.Stop();
                         MessageBox.Show("Game Over");
@@ -225,7 +226,7 @@ namespace Space_Invaders
                 mainCanvas.Children.Remove(y);
             }
 
-            if(totalEnemies < 1)
+            if (totalEnemies < 1)
             {
                 dispatcherTimer.Stop();
                 MessageBox.Show("Victory");
