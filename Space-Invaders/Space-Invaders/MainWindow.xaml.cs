@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Timers;
+using System.Security.Policy;
 
 namespace Space_Invaders
 {
@@ -27,7 +30,7 @@ namespace Space_Invaders
         private int bulletCooldown;
         private int bulletCooldownLimit = 90;
         private int totalEnemies;
-        private int timeBetweenFrames = 20;
+        private int timeBetweenFrames = 41;
         private DispatcherTimer dispatcherTimer = new DispatcherTimer();
         private ImageBrush playerSkin = new ImageBrush();
         private float enemySpeed = 6f;
@@ -42,8 +45,9 @@ namespace Space_Invaders
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(timeBetweenFrames);
             dispatcherTimer.Start();
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
+            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
             playerRectangle.Fill = playerSkin;
-            spawnEnemies(15);
+            spawnEnemies(16);
         }
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
@@ -154,6 +158,14 @@ namespace Space_Invaders
             return enemySkin;
         }
 
+        private ImageBrush getExplosionSkin()
+        {
+            ImageBrush explosion = new ImageBrush();
+            string imageName = "pack://application:,,,/Images/explosion.png";
+            explosion.ImageSource = new BitmapImage(new Uri(imageName));
+            return explosion;
+        }
+
         private void movePlayer()
         {
             if (goLeft && Canvas.GetLeft(playerRectangle) > 0)
@@ -190,10 +202,15 @@ namespace Space_Invaders
 
                     if (bullet.IntersectsWith(enemy))
                     {
+                        y.Fill = getExplosionSkin();
                         itemsToRemove.Add(x);
-                        itemsToRemove.Add(y);
                         totalEnemies--;
                         if (enemySpeed <= 20f) enemySpeed += enemySpeedChange;
+                        Task.Factory.StartNew(() =>
+                        {
+                            Thread.Sleep(300);
+                            itemsToRemove.Add(y);
+                        }); 
                     }
                 }
             }

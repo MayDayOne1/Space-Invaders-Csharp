@@ -105,5 +105,8 @@
     <Resource Include="Images\invader8.gif" />
     <Resource Include="Images\player.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\explosion.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
