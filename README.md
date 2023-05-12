@@ -11,9 +11,9 @@ Inspiracja:
 Wkład własny:
   - losowanie wyglądu kosmitów;
   - refaktoryzacja kodu (m.in. oddelegowanie funkcjonalności do konkretnych funkcji);
+  - płynna zmiana prędkości obcych;
 
 TO DO:
   - sprite wybuchu;
   - dźwięki strzelania, wybuchu i wyboru opcji;
-  - zmiana prędkości obcych po zabiciu jednego;
   - poruszanie się obcych od jednej krawędzi ekranu do drugiej;

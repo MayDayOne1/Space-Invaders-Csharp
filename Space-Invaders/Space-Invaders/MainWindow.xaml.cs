@@ -30,7 +30,8 @@ namespace Space_Invaders
         private int timeBetweenFrames = 20;
         private DispatcherTimer dispatcherTimer = new DispatcherTimer();
         private ImageBrush playerSkin = new ImageBrush();
-        private int enemySpeed = 6;
+        private float enemySpeed = 6f;
+        private float enemySpeedChange = 1f;
 
 
         public MainWindow()
@@ -175,14 +176,6 @@ namespace Space_Invaders
             }
         }
 
-        private void enemySpeedManager()
-        {
-            if (totalEnemies < 10)
-            {
-                enemySpeed = 20;
-            }
-        }
-
         private void playerBulletManager(Rectangle x)
         {
             Canvas.SetTop(x, Canvas.GetTop(x) - 20);
@@ -200,6 +193,7 @@ namespace Space_Invaders
                         itemsToRemove.Add(x);
                         itemsToRemove.Add(y);
                         totalEnemies--;
+                        if (enemySpeed <= 20f) enemySpeed += enemySpeedChange;
                     }
                 }
             }
@@ -251,7 +245,6 @@ namespace Space_Invaders
 
             movePlayer();
             spawnBullets();
-            enemySpeedManager();
 
             foreach (var x in mainCanvas.Children.OfType<Rectangle>())
             {
