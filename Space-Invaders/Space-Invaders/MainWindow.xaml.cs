@@ -30,7 +30,7 @@ namespace Space_Invaders
         private int bulletCooldown;
         private int bulletCooldownLimit = 90;
         private int totalEnemies;
-        private int timeBetweenFrames = 41;
+        private int timeBetweenFrames = 20;
         private DispatcherTimer dispatcherTimer = new DispatcherTimer();
         private ImageBrush playerSkin = new ImageBrush();
         private float enemySpeed = 6f;
@@ -41,13 +41,13 @@ namespace Space_Invaders
         {
             InitializeComponent();
             gameOver = false;
-            dispatcherTimer.Tick += gameManager;
+            dispatcherTimer.Tick += GameManager;
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(timeBetweenFrames);
             dispatcherTimer.Start();
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
             playerRectangle.Fill = playerSkin;
-            spawnEnemies(16);
+            SpawnEnemies(16);
         }
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
@@ -82,7 +82,7 @@ namespace Space_Invaders
                     System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
                 }
                 itemsToRemove.Clear();
-                playerBulletSpawner();
+                PlayerBulletSpawner();
             }
 
             if(e.Key == Key.Escape)
@@ -91,7 +91,7 @@ namespace Space_Invaders
             }
         }
 
-        private void playerBulletSpawner()
+        private void PlayerBulletSpawner()
         {
             Rectangle bullet = new Rectangle
             {
@@ -109,7 +109,7 @@ namespace Space_Invaders
             mainCanvas.Children.Add(bullet);
         }
 
-        private void enemyBulletSpawner(double x, double y)
+        private void EnemyBulletSpawner(double x, double y)
         {
             Rectangle enemyBullet = new Rectangle
             {
@@ -126,14 +126,14 @@ namespace Space_Invaders
             mainCanvas.Children.Add(enemyBullet);
         }
 
-        private void spawnEnemies(int limit)
+        private void SpawnEnemies(int limit)
         {
             int left = 0;
             Random rnd = new Random();
             totalEnemies = limit;
             for (int i = 0; i < limit; i++)
             {
-                ImageBrush enemySkin = randomEnemySkin(rnd);
+                ImageBrush enemySkin = RandomEnemySkin(rnd);
                 Rectangle enemy = new Rectangle
                 {
                     Tag = "Enemy",
@@ -148,7 +148,7 @@ namespace Space_Invaders
             }
         }
 
-        private ImageBrush randomEnemySkin(Random rnd)
+        private ImageBrush RandomEnemySkin(Random rnd)
         {
             ImageBrush enemySkin = new ImageBrush();
             int enemyImages = rnd.Next(1, 8);
@@ -158,15 +158,33 @@ namespace Space_Invaders
             return enemySkin;
         }
 
-        private ImageBrush getExplosionSkin()
+        private Rectangle SpawnExplosion(double x, double y)
         {
-            ImageBrush explosion = new ImageBrush();
+            
+            ImageBrush explosionSkin = new ImageBrush();
             string imageName = "pack://application:,,,/Images/explosion.png";
-            explosion.ImageSource = new BitmapImage(new Uri(imageName));
+            explosionSkin.ImageSource = new BitmapImage(new Uri(imageName));
+
+            Rectangle explosion = new Rectangle
+            {
+                Tag = "Explosion",
+                Height = 45,
+                Width = 45,
+                Fill = explosionSkin
+            };
+            Canvas.SetTop(explosion, y);
+            Canvas.SetLeft(explosion, x);
+            mainCanvas.Children.Add(explosion);
             return explosion;
         }
 
-        private void movePlayer()
+        private async void ClearExplosion(object sender, EventArgs e, Rectangle ex)
+        {
+            await Task.Delay(100);
+            mainCanvas.Children.Remove(ex);
+        }
+
+        private void MovePlayer()
         {
             if (goLeft && Canvas.GetLeft(playerRectangle) > 0)
             {
@@ -178,17 +196,17 @@ namespace Space_Invaders
             }
         }
 
-        private void spawnBullets()
+        private void SpawnBullets()
         {
             bulletCooldown -= 3;
             if (bulletCooldown < 0)
             {
-                enemyBulletSpawner((Canvas.GetLeft(playerRectangle) + 20), 10);
+                EnemyBulletSpawner((Canvas.GetLeft(playerRectangle) + 20), 10);
                 bulletCooldown = bulletCooldownLimit;
             }
         }
 
-        private void playerBulletManager(Rectangle x)
+        private void PlayerBulletManager(Rectangle x)
         {
             Canvas.SetTop(x, Canvas.GetTop(x) - 20);
             Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
@@ -202,20 +220,15 @@ namespace Space_Invaders
 
                     if (bullet.IntersectsWith(enemy))
                     {
-                        y.Fill = getExplosionSkin();
                         itemsToRemove.Add(x);
+                        itemsToRemove.Add(y); 
                         totalEnemies--;
                         if (enemySpeed <= 20f) enemySpeed += enemySpeedChange;
-                        Task.Factory.StartNew(() =>
-                        {
-                            Thread.Sleep(300);
-                            itemsToRemove.Add(y);
-                        }); 
                     }
                 }
             }
         }
-        private void enemyManager(Rectangle x, Rect player)
+        private void EnemyManager(Rectangle x, Rect player)
         {
             Canvas.SetLeft(x, Canvas.GetLeft(x) + enemySpeed);
 
@@ -235,7 +248,7 @@ namespace Space_Invaders
             }
         }
 
-        private void enemyBulletManager(Rectangle x, Rect player)
+        private void EnemyBulletManager(Rectangle x, Rect player)
         {
             Canvas.SetTop(x, Canvas.GetTop(x) + 10);
             if (Canvas.GetTop(x) > 680)
@@ -253,24 +266,32 @@ namespace Space_Invaders
             }
         }
 
-        private void gameManager(object sender, EventArgs e)
+        private void GameManager(object sender, EventArgs e)
         {
             Rect player = new Rect(Canvas.GetLeft(playerRectangle),
                 Canvas.GetTop(playerRectangle),
                 playerRectangle.Width,
                 playerRectangle.Height);
 
-            movePlayer();
-            spawnBullets();
+            MovePlayer();
+            SpawnBullets();
 
             foreach (var x in mainCanvas.Children.OfType<Rectangle>())
             {
-                if (x is Rectangle && (string)x.Tag == "Bullet") playerBulletManager(x);
-                if (x is Rectangle && (string)x.Tag == "Enemy") enemyManager(x, player);
-                if (x is Rectangle && (string)x.Tag == "EnemyBullet") enemyBulletManager(x, player);
+                if (x is Rectangle && (string)x.Tag == "Bullet") PlayerBulletManager(x);
+                if (x is Rectangle && (string)x.Tag == "Enemy") EnemyManager(x, player);
+                if (x is Rectangle && (string)x.Tag == "EnemyBullet") EnemyBulletManager(x, player);
             }
 
-            foreach (Rectangle y in itemsToRemove)  mainCanvas.Children.Remove(y);
+            foreach (Rectangle y in itemsToRemove)
+            {
+                if((string)y.Tag == "Enemy")
+                {
+                    Rectangle ex = SpawnExplosion(Canvas.GetLeft(y), Canvas.GetTop(y));
+                    ClearExplosion(sender, e, ex);
+                }
+                mainCanvas.Children.Remove(y);
+            }
             
             if (totalEnemies < 1)
             {
