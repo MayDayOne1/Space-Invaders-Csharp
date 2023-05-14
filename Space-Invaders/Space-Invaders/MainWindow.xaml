@@ -8,7 +8,8 @@
         Title="Space Invaders C#" Height="700" Width="800" FocusManager.FocusedElement="{Binding ElementName=mainCanvas}">
     <Canvas Name="mainCanvas" Background="#000" Focusable="True" KeyDown="Canvas_KeyIsDown" KeyUp="Canvas_KeyIsUp">
         <Rectangle Name="playerRectangle" Fill="#fff" Height="65" Width="55" Canvas.Left="568" Canvas.Top="594" />
-        <Label  Name="GameOver" FontSize="36" Height="100" Width="200" Canvas.Left="300" Canvas.Top="300" Foreground="White" VerticalAlignment="Center"></Label>
+        <Label  Name="GameOver" FontSize="36" Height="100" Width="200" Canvas.Left="300" Canvas.Top="300" Foreground="White" VerticalAlignment="Center">
+        </Label>
         <Label Name="TryAgain" FontSize="18" Height="100" Width="200" Canvas.Left="300" Canvas.Top="350" Foreground="White" VerticalAlignment="Center"></Label>
         
     </Canvas>

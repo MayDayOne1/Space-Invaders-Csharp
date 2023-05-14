@@ -34,7 +34,7 @@ namespace Space_Invaders
         private ImageBrush playerSkin = new ImageBrush();
         private float enemySpeed = 6f;
         private float enemySpeedChange = 1f;
-        private SoundPlayer mainThemePlayer = new SoundPlayer("SpaceInvadersTheme.wav");
+        private SoundPlayer mainThemePlayer = new SoundPlayer(AppDomain.CurrentDomain.BaseDirectory + "/Audio/SpaceInvadersTheme.wav");
 
 
         public MainWindow()
@@ -47,7 +47,7 @@ namespace Space_Invaders
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
             playerRectangle.Fill = playerSkin;
             SpawnEnemies(16);
-            mainThemePlayer.Play();
+            mainThemePlayer.PlayLooping();
         }
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
