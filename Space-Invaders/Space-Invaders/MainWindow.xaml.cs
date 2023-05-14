@@ -15,8 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Timers;
-using System.Security.Policy;
+using System.Media;
 
 namespace Space_Invaders
 {
@@ -35,6 +34,7 @@ namespace Space_Invaders
         private ImageBrush playerSkin = new ImageBrush();
         private float enemySpeed = 6f;
         private float enemySpeedChange = 1f;
+        private SoundPlayer mainThemePlayer = new SoundPlayer("SpaceInvadersTheme.wav");
 
 
         public MainWindow()
@@ -45,9 +45,9 @@ namespace Space_Invaders
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(timeBetweenFrames);
             dispatcherTimer.Start();
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
-            playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
             playerRectangle.Fill = playerSkin;
             SpawnEnemies(16);
+            mainThemePlayer.Play();
         }
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
@@ -160,7 +160,6 @@ namespace Space_Invaders
 
         private Rectangle SpawnExplosion(double x, double y)
         {
-            
             ImageBrush explosionSkin = new ImageBrush();
             string imageName = "pack://application:,,,/Images/explosion.png";
             explosionSkin.ImageSource = new BitmapImage(new Uri(imageName));
@@ -242,6 +241,7 @@ namespace Space_Invaders
             if (player.IntersectsWith(enemy))
             {
                 dispatcherTimer.Stop();
+                mainThemePlayer.Stop();
                 gameOver = true;
                 GameOver.Content = "Game Over";
                 TryAgain.Content = "Press Enter to try again";
@@ -260,6 +260,7 @@ namespace Space_Invaders
             if (enemyBullet.IntersectsWith(player))
             {
                 dispatcherTimer.Stop();
+                mainThemePlayer.Stop();
                 gameOver = true;
                 GameOver.Content = "Game Over";
                 TryAgain.Content = "Press Enter to try again";
@@ -296,6 +297,7 @@ namespace Space_Invaders
             if (totalEnemies < 1)
             {
                 dispatcherTimer.Stop();
+                mainThemePlayer.Stop();
                 gameOver = true;
                 GameOver.Content = "You won!";
                 TryAgain.Content = "Press Enter to try again";

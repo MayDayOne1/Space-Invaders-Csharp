@@ -12,8 +12,8 @@ Wkład własny:
   - losowanie wyglądu kosmitów;
   - refaktoryzacja kodu (m.in. oddelegowanie funkcjonalności do konkretnych funkcji);
   - płynna zmiana prędkości obcych;
+  - asynchroniczne pojawianie się i znikanie eksplozji po trafieniu wroga;
 
 TO DO:
-  - sprite wybuchu;
   - dźwięki strzelania, wybuchu i wyboru opcji;
   - poruszanie się obcych od jednej krawędzi ekranu do drugiej;
