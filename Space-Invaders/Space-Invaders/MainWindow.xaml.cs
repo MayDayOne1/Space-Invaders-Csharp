@@ -46,7 +46,7 @@ namespace Space_Invaders
             dispatcherTimer.Start();
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
             playerRectangle.Fill = playerSkin;
-            SpawnEnemies(16);
+            SpawnEnemies(30);
             mainThemePlayer.PlayLooping();
         }
 
@@ -231,7 +231,7 @@ namespace Space_Invaders
         {
             Canvas.SetLeft(x, Canvas.GetLeft(x) + enemySpeed);
 
-            if (Canvas.GetLeft(x) > 820)
+            if (Canvas.GetLeft(x) > 720)
             {
                 Canvas.SetLeft(x, -80);
                 Canvas.SetTop(x, Canvas.GetTop(x) + (x.Height + 10));
