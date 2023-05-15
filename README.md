@@ -1,6 +1,11 @@
 # Space-Invaders-Csharp
 Programowanie obiektowe - projekt zaliczeniowy
 
+Instalacja:
+  - należy przejść do folderu Space-Invaders-Csharp/Space-Invaders i wybrać setup.exe;
+  - należy podążać za instrukcjami;
+  - po wykonaniu instrukcji można już grać!
+
 Inspiracja:
   - pojawianie się i ruch kosmitów;
   - poruszanie się gracza;
