@@ -2,6 +2,7 @@
 Programowanie obiektowe - projekt zaliczeniowy
 
 Instalacja:
+  - należy sklonować projekt lub pobrać paczkę .zip, a następnie ją rozpakować;
   - należy przejść do folderu Space-Invaders-Csharp/Space-Invaders i wybrać setup.exe;
   - należy podążać za instrukcjami;
   - po wykonaniu instrukcji można już grać!
