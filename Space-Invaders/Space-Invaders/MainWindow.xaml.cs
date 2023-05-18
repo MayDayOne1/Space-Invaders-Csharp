@@ -16,16 +16,16 @@ namespace Space_Invaders
     public partial class MainWindow : Window
     {
         private bool goLeft, goRight, gameOver = false;
-        private List<Rectangle> itemsToRemove = new List<Rectangle>();
+        private readonly List<Rectangle> itemsToRemove = new List<Rectangle>();
         private int bulletCooldown;
-        private int bulletCooldownLimit = 90;
+        private readonly int bulletCooldownLimit = 90;
         private int totalEnemies;
-        private int timeBetweenFrames = 20;
-        private DispatcherTimer dispatcherTimer = new DispatcherTimer();
-        private ImageBrush playerSkin = new ImageBrush();
+        private readonly int timeBetweenFrames = 20;
+        private readonly DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        private readonly ImageBrush playerSkin = new ImageBrush();
         private float enemySpeed = 6f;
-        private float enemySpeedChange = .8f;
-        private SoundPlayer mainThemePlayer = new SoundPlayer(AppDomain.CurrentDomain.BaseDirectory + "/Audio/SpaceInvadersTheme.wav");
+        private readonly float enemySpeedChange = .8f;
+        private readonly SoundPlayer mainThemePlayer = new SoundPlayer(AppDomain.CurrentDomain.BaseDirectory + "/Audio/SpaceInvadersTheme.wav");
 
 
         public MainWindow()
@@ -168,7 +168,7 @@ namespace Space_Invaders
             return explosion;
         }
 
-        private async void ClearExplosion(object sender, EventArgs e, Rectangle ex)
+        private async void ClearExplosion(Rectangle ex)
         {
             await Task.Delay(100);
             mainCanvas.Children.Remove(ex);
@@ -280,7 +280,7 @@ namespace Space_Invaders
                 if((string)y.Tag == "Enemy")
                 {
                     Rectangle ex = SpawnExplosion(Canvas.GetLeft(y), Canvas.GetTop(y));
-                    ClearExplosion(sender, e, ex);
+                    ClearExplosion(ex);
                 }
                 mainCanvas.Children.Remove(y);
             }
