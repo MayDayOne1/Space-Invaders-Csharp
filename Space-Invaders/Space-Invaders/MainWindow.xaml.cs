@@ -9,7 +9,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Media;
 
 namespace Space_Invaders
 {
@@ -25,8 +24,7 @@ namespace Space_Invaders
         private readonly ImageBrush playerSkin = new ImageBrush();
         private float enemySpeed = 6f;
         private readonly float enemySpeedChange = .8f;
-        private readonly SoundPlayer mainThemePlayer = new SoundPlayer(AppDomain.CurrentDomain.BaseDirectory + "/Audio/SpaceInvadersTheme.wav");
-
+        private readonly MediaPlayer mediaPlayer = new MediaPlayer();
 
         public MainWindow()
         {
@@ -38,7 +36,8 @@ namespace Space_Invaders
             playerSkin.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/player.png"));
             playerRectangle.Fill = playerSkin;
             SpawnEnemies(30);
-            mainThemePlayer.PlayLooping();
+            mediaPlayer.Open(new Uri(AppDomain.CurrentDomain.BaseDirectory + "/Audio/SpaceInvadersTheme.mp3"));
+            mediaPlayer.Play();
         }
 
         private void Canvas_KeyIsDown(object sender, KeyEventArgs e)
@@ -232,7 +231,7 @@ namespace Space_Invaders
             if (player.IntersectsWith(enemy))
             {
                 dispatcherTimer.Stop();
-                mainThemePlayer.Stop();
+                mediaPlayer.Stop();
                 gameOver = true;
                 GameOver.Content = "Game Over";
                 TryAgain.Content = "Press Enter to try again";
@@ -251,7 +250,7 @@ namespace Space_Invaders
             if (enemyBullet.IntersectsWith(player))
             {
                 dispatcherTimer.Stop();
-                mainThemePlayer.Stop();
+                mediaPlayer.Stop();
                 gameOver = true;
                 GameOver.Content = "Game Over";
                 TryAgain.Content = "Press Enter to try again";
@@ -288,7 +287,7 @@ namespace Space_Invaders
             if (totalEnemies < 1)
             {
                 dispatcherTimer.Stop();
-                mainThemePlayer.Stop();
+                mediaPlayer.Stop();
                 gameOver = true;
                 GameOver.Content = "You won!";
                 TryAgain.Content = "Press Enter to try again";

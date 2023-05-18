@@ -150,7 +150,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Audio\SpaceInvadersTheme.wav">
+    <Content Include="Audio\SpaceInvadersTheme.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
